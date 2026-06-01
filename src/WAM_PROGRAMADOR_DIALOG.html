@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <style>
+      :root{
+        --bg:#f4f7fb; --panel:#ffffff; --line:#d9e1ec; --muted:#5d6b82;
+        --text:#162033; --primary:#0b57d0; --primary2:#1f6feb;
+        --success:#067647; --danger:#b42318; --warn:#b54708;
+      }
+      *{box-sizing:border-box}
+      body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+      .wrap{display:grid;grid-template-columns:380px 1fr;gap:14px;padding:16px;height:100vh}
+      .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+      .panel-header{padding:14px 16px;border-bottom:1px solid var(--line);background:#fbfcfe}
+      h1{font-size:16px;margin:0 0 6px 0}
+      .muted{font-size:12px;color:var(--muted)}
+      .panel-body{padding:14px 16px;overflow:auto;min-height:0;flex:1}
+      .status{display:none;margin:12px 16px 0;padding:10px 12px;border-radius:10px;font-size:12px;border:1px solid transparent}
+      .status.show{display:block}
+      .status.info{background:#eef4ff;color:#1d4ed8;border-color:#bfd3ff}
+      .status.success{background:#ecfdf3;color:var(--success);border-color:#abefc6}
+      .status.error{background:#fee4e2;color:var(--danger);border-color:#fecdca}
+      .status.warn{background:#fff7ed;color:var(--warn);border-color:#fed7aa}
+      .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+      .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+      .btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer}
+      .btn:hover{filter:brightness(.98)}
+      .btn:disabled{opacity:.55;cursor:not-allowed}
+      .btn-primary{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:700}
+      .btn-secondary{background:#eef4ff;border-color:#cfe0ff;color:#163d8f}
+      .btn-ghost{background:#fff}
+      .field{margin-bottom:14px}
+      label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+      input[type=text], input[type=date], input[type=time], input[type=number], textarea, select{
+        width:100%;border:1px solid #cfd8e3;border-radius:10px;padding:10px 12px;font-size:13px;background:#fff
+      }
+      textarea{min-height:150px;resize:vertical}
+      small{display:block;color:var(--muted);margin-top:4px;font-size:11px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef3fb;color:#16335b;font-size:12px;font-weight:700}
+      .contact-list{border:1px solid var(--line);border-radius:12px;min-height:320px;max-height:420px;overflow:auto;background:#fff}
+      .contact-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-bottom:1px solid #eef2f7;cursor:pointer}
+      .contact-item:last-child{border-bottom:none}
+      .contact-item:hover{background:#f8fafd}
+      .contact-check{margin-top:3px;pointer-events:none}
+      .contact-meta{min-width:0;flex:1}
+      .contact-name{font-size:13px;font-weight:700;line-height:1.3}
+      .contact-sub{font-size:12px;color:var(--muted);line-height:1.35}
+      .badge{display:inline-block;background:#eef2ff;border:1px solid #dbe4ff;color:#3449a8;border-radius:999px;padding:2px 8px;font-size:11px;margin-top:4px}
+      .pager{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:10px}
+      .footer{padding:14px 16px;border-top:1px solid var(--line);background:#fbfcfe;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+      .sync-box{margin-top:10px;padding:10px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e5edf7}
+      .hidden{display:none!important}
+      .empty{padding:18px 12px;color:var(--muted);font-size:12px}
+      .spinner{display:inline-block;width:14px;height:14px;border:2px solid #ccc;border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+      @keyframes spin{to{transform:rotate(360deg)}}
+      @media (max-width: 980px){ .wrap{grid-template-columns:1fr;height:auto}.grid{grid-template-columns:1fr} }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="panel">
+        <div class="panel-header">
+          <h1>Contactos</h1>
+          <div class="muted">Todos los contactos se cargan una sola vez. Búsqueda y paginación instantánea.</div>
+
+          <div class="toolbar">
+            <input id="searchBox" type="text" placeholder="Buscar por nombre, número o etiqueta" style="flex:1 1 220px;">
+            <button class="btn btn-ghost" id="syncBtn" onclick="syncContacts()">🔄 Sincronizar</button>
+          </div>
+
+          <div class="toolbar">
+            <button class="btn btn-secondary" onclick="toggleVisible(true)">Seleccionar visibles</button>
+            <button class="btn btn-ghost" onclick="toggleVisible(false)">Limpiar visibles</button>
+            <button class="btn btn-ghost" onclick="clearAllSelection()">Vaciar todo</button>
+          </div>
+
+          <div class="toolbar">
+            <span class="pill" id="selectionCount">0 seleccionados</span>
+            <span class="muted" id="contactCount">0 resultados</span>
+          </div>
+
+          <div id="syncInfo" class="sync-box">
+            <div id="syncText" class="muted">Cargando...</div>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div id="contactList" class="contact-list"></div>
+          <div class="pager">
+            <div class="muted" id="pageInfo">Página 1/1</div>
+            <div class="row">
+              <button class="btn btn-ghost" id="prevBtn" onclick="changePage(-1)">Anterior</button>
+              <button class="btn btn-ghost" id="nextBtn" onclick="changePage(1)">Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h1>Mensaje y programación</h1>
+          <div class="muted">Una sola vez o recurrente por día, semana o mes.</div>
+        </div>
+
+        <div id="statusBox" class="status"></div>
+
+        <div class="panel-body">
+          <div class="field">
+            <label for="campaignName">Nombre de campaña</label>
+            <input id="campaignName" type="text" placeholder="Ej: Recordatorio de pago abril">
+            <small>Si lo dejas vacío, el sistema le pondrá uno automáticamente.</small>
+          </div>
+
+          <div class="field">
+            <label for="messageBox">Mensaje</label>
+            <textarea id="messageBox" placeholder="Escribe aquí el mensaje. Variables: {nombre}, {numero}, {fecha}, {hora}."></textarea>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="dateField">Fecha de envío</label>
+              <input id="dateField" type="date" onchange="syncDerivedFields()">
+            </div>
+            <div class="field">
+              <label for="timeField">Hora de envío</label>
+              <input id="timeField" type="time">
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="frequencyField">Frecuencia</label>
+              <select id="frequencyField" onchange="onFrequencyChange()">
+                <option value="UNA_VEZ">Una sola vez</option>
+                <option value="DIARIA">Diaria</option>
+                <option value="SEMANAL">Semanal</option>
+                <option value="MENSUAL">Mensual</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <label class="row"><input id="linkPreviewField" type="checkbox"> <span>Vista previa de enlace</span></label>
+            </div>
+          </div>
+
+          <div id="weeklyWrap" class="field hidden">
+            <label for="weekdayField">Día de la semana</label>
+            <select id="weekdayField">
+              <option value="LUNES">Lunes</option>
+              <option value="MARTES">Martes</option>
+              <option value="MIERCOLES">Miércoles</option>
+              <option value="JUEVES">Jueves</option>
+              <option value="VIERNES">Viernes</option>
+              <option value="SABADO">Sábado</option>
+              <option value="DOMINGO">Domingo</option>
+            </select>
+          </div>
+
+          <div id="monthlyWrap" class="field hidden">
+            <label for="monthDayField">Día del mes</label>
+            <input id="monthDayField" type="number" min="1" max="31" value="1">
+            <small>Si el mes no tiene ese día, se usa el último disponible.</small>
+          </div>
+
+          <div class="field">
+            <label for="notesField">Notas internas</label>
+            <input id="notesField" type="text" placeholder="Opcional">
+          </div>
+
+          <div class="field">
+            <small>Botón azul = programar para después. Botón gris = enviar de inmediato.</small>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="muted" id="tzLabel">Zona horaria: -</div>
+          <div class="row">
+            <button class="btn btn-ghost" onclick="google.script.host.close()">Cerrar</button>
+            <button class="btn btn-secondary" id="sendNowBtn" onclick="sendNow()">Enviar ahora</button>
+            <button class="btn btn-primary" id="scheduleBtn" onclick="saveSchedule()">Programar envío</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      /* ============================================================
+         CLIENT-SIDE STATE
+         All contacts loaded once. Search + pagination = instant.
+         ============================================================ */
+      var APP = {
+        allContacts: [],   // full list from server
+        filtered: [],      // after search filter
+        selected: {},      // id -> true
+        page: 1,
+        pageSize: 80,
+        totalPages: 1,
+        search: '',
+        searchTimer: null,
+        syncRunning: false,
+        booted: false
+      };
+
+      /* ---- INIT ---- */
+      function init() {
+        bindSearch();
+        setSyncText('Cargando contactos...');
+        google.script.run
+          .withSuccessHandler(function(data) {
+            data = data || {};
+            hydrateDefaults(data);
+            APP.allContacts = data.contacts || [];
+            APP.booted = true;
+            applyFilter();
+            setSyncText('✅ ' + APP.allContacts.length + ' contactos cargados.');
+          })
+          .withFailureHandler(function(err) {
+            showError(err);
+            setSyncText('Error al cargar: ' + errMsg(err));
+          })
+          .WAM_dialogBoot();
+      }
+
+      function hydrateDefaults(data) {
+        document.getElementById('dateField').value = data.today || '';
+        document.getElementById('timeField').value = data.timeNow || '09:00';
+        document.getElementById('tzLabel').textContent = 'Zona horaria: ' + (data.timezone || '-');
+        if (data.pageSize) APP.pageSize = data.pageSize;
+        syncDerivedFields();
+      }
+
+      /* ---- SEARCH (client-side, instant) ---- */
+      function bindSearch() {
+        var box = document.getElementById('searchBox');
+        box.addEventListener('input', function() {
+          clearTimeout(APP.searchTimer);
+          APP.searchTimer = setTimeout(function() {
+            APP.search = box.value || '';
+            APP.page = 1;
+            applyFilter();
+          }, 120);
+        });
+      }
+
+      function applyFilter() {
+        var needle = (APP.search || '').toLowerCase().trim();
+        if (!needle) {
+          APP.filtered = APP.allContacts;
+        } else {
+          var terms = needle.split(/\s+/);
+          APP.filtered = APP.allContacts.filter(function(c) {
+            var hay = (c.n + ' ' + c.u + ' ' + c.t + ' ' + c.i).toLowerCase();
+            return terms.every(function(t) { return hay.indexOf(t) !== -1; });
+          });
+        }
+        APP.totalPages = Math.max(1, Math.ceil(APP.filtered.length / APP.pageSize));
+        if (APP.page > APP.totalPages) APP.page = APP.totalPages;
+        renderContacts();
+      }
+
+      /* ---- RENDER ---- */
+      function renderContacts() {
+        var list = document.getElementById('contactList');
+        var start = (APP.page - 1) * APP.pageSize;
+        var items = APP.filtered.slice(start, start + APP.pageSize);
+
+        if (!items.length) {
+          list.innerHTML = '<div class="empty">No hay contactos para mostrar.</div>';
+        } else {
+          // Build HTML in bulk for performance
+          var html = [];
+          for (var i = 0; i < items.length; i++) {
+            var c = items[i];
+            var checked = APP.selected[c.i] ? ' checked' : '';
+            html.push(
+              '<div class="contact-item" onclick="toggleById(\'' + esc(c.i) + '\', this)">' +
+              '<input type="checkbox" class="contact-check" data-id="' + esc(c.i) + '"' + checked + '>' +
+              '<div class="contact-meta">' +
+              '<div class="contact-name">' + esc(c.n || '(sin nombre)') + '</div>' +
+              '<div class="contact-sub">' + esc(c.u || c.i || '') + '</div>' +
+              (c.t ? '<div class="badge">' + esc(c.t) + '</div>' : '') +
+              '</div></div>'
+            );
+          }
+          list.innerHTML = html.join('');
+        }
+
+        var total = APP.filtered.length;
+        var from = total ? start + 1 : 0;
+        var to = total ? Math.min(start + APP.pageSize, total) : 0;
+        document.getElementById('contactCount').textContent = from + '-' + to + ' de ' + total;
+        document.getElementById('pageInfo').textContent = 'Página ' + APP.page + '/' + APP.totalPages;
+        document.getElementById('prevBtn').disabled = APP.page <= 1;
+        document.getElementById('nextBtn').disabled = APP.page >= APP.totalPages;
+        updateSelectionCount();
+      }
+
+      /* ---- SELECTION ---- */
+      function toggleById(id, row) {
+        if (APP.selected[id]) {
+          delete APP.selected[id];
+        } else {
+          APP.selected[id] = true;
+        }
+        var cb = row.querySelector('.contact-check');
+        if (cb) cb.checked = !!APP.selected[id];
+        updateSelectionCount();
+      }
+
+      function toggleVisible(state) {
+        var checks = document.querySelectorAll('.contact-check');
+        for (var i = 0; i < checks.length; i++) {
+          var id = checks[i].getAttribute('data-id');
+          if (!id) continue;
+          checks[i].checked = !!state;
+          if (state) APP.selected[id] = true;
+          else delete APP.selected[id];
+        }
+        updateSelectionCount();
+      }
+
+      function clearAllSelection() {
+        APP.selected = {};
+        renderContacts();
+      }
+
+      function updateSelectionCount() {
+        var n = Object.keys(APP.selected).length;
+        document.getElementById('selectionCount').textContent = n + ' seleccionados';
+      }
+
+      /* ---- PAGINATION ---- */
+      function changePage(delta) {
+        var target = APP.page + delta;
+        if (target < 1 || target > APP.totalPages) return;
+        APP.page = target;
+        renderContacts();
+        document.getElementById('contactList').scrollTop = 0;
+      }
+
+      /* ---- SYNC ---- */
+      function syncContacts() {
+        if (APP.syncRunning) return;
+        APP.syncRunning = true;
+        document.getElementById('syncBtn').disabled = true;
+        setSyncText('<span class="spinner"></span> Sincronizando con Green API...');
+        google.script.run
+          .withSuccessHandler(function(data) {
+            APP.syncRunning = false;
+            document.getElementById('syncBtn').disabled = false;
+            APP.allContacts = data.contacts || [];
+            APP.page = 1;
+            applyFilter();
+            var s = data.sync || {};
+            setSyncText('✅ Sync OK. API: ' + num(s.total) + ' | nuevos: ' + num(s.inserted) + ' | actualizados: ' + num(s.updated) + ' | total cargados: ' + APP.allContacts.length);
+            showSuccess('Sincronización completada.');
+          })
+          .withFailureHandler(function(err) {
+            APP.syncRunning = false;
+            document.getElementById('syncBtn').disabled = false;
+            setSyncText('❌ Error: ' + errMsg(err));
+            showError(err);
+          })
+          .WAM_dialogSync();
+      }
+
+      /* ---- FORM HELPERS ---- */
+      function syncDerivedFields() {
+        var v = document.getElementById('dateField').value;
+        if (!v) return;
+        var d = new Date(v + 'T12:00:00');
+        if (!isNaN(d.getTime())) {
+          var wm = ['DOMINGO','LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+          document.getElementById('weekdayField').value = wm[d.getDay()];
+          document.getElementById('monthDayField').value = String(d.getDate());
+        }
+      }
+
+      function onFrequencyChange() {
+        var f = document.getElementById('frequencyField').value;
+        document.getElementById('weeklyWrap').classList.toggle('hidden', f !== 'SEMANAL');
+        document.getElementById('monthlyWrap').classList.toggle('hidden', f !== 'MENSUAL');
+      }
+
+      function collectPayload() {
+        return {
+          selectedContactIds: Object.keys(APP.selected),
+          campaignName: document.getElementById('campaignName').value || '',
+          message: document.getElementById('messageBox').value || '',
+          date: document.getElementById('dateField').value || '',
+          time: document.getElementById('timeField').value || '',
+          frequency: document.getElementById('frequencyField').value || 'UNA_VEZ',
+          weekday: document.getElementById('weekdayField').value || '',
+          dayOfMonth: document.getElementById('monthDayField').value || '',
+          linkPreview: document.getElementById('linkPreviewField').checked,
+          notes: document.getElementById('notesField').value || ''
+        };
+      }
+
+      function validatePayload(p, mode) {
+        if (!p.selectedContactIds.length) throw new Error('Selecciona al menos un contacto.');
+        if (!String(p.message || '').trim()) throw new Error('El mensaje está vacío.');
+        if (mode === 'schedule') {
+          if (!p.date) throw new Error('La fecha es obligatoria.');
+          if (!p.time) throw new Error('La hora es obligatoria.');
+        }
+      }
+
+      /* ---- ACTIONS ---- */
+      function saveSchedule() {
+        try {
+          var p = collectPayload();
+          validatePayload(p, 'schedule');
+          setActionBusy(true);
+          setBusy('Guardando programación...');
+          google.script.run
+            .withSuccessHandler(function(r) {
+              setActionBusy(false);
+              showSuccess('Programado. Lote: ' + r.lotId + ' | filas: ' + r.created + ' | próximo: ' + r.nextRun);
+            })
+            .withFailureHandler(function(e) { setActionBusy(false); showError(e); })
+            .WAM_guardarProgramacionDesdeDialogo(p);
+        } catch (e) { showError(e); }
+      }
+
+      function sendNow() {
+        try {
+          var p = collectPayload();
+          validatePayload(p, 'send');
+          var n = p.selectedContactIds.length;
+          if (n > 5 && !confirm('¿Enviar a ' + n + ' contactos ahora?')) return;
+          setActionBusy(true);
+          setBusy('Enviando mensajes...');
+          google.script.run
+            .withSuccessHandler(function(r) {
+              setActionBusy(false);
+              showSuccess('Enviados OK: ' + r.sentOk + ' | errores: ' + r.sentError + ' | total: ' + r.total);
+            })
+            .withFailureHandler(function(e) { setActionBusy(false); showError(e); })
+            .WAM_enviarAhoraDesdeDialogo(p);
+        } catch (e) { showError(e); }
+      }
+
+      function setActionBusy(busy) {
+        document.getElementById('sendNowBtn').disabled = busy;
+        document.getElementById('scheduleBtn').disabled = busy;
+      }
+
+      /* ---- UI HELPERS ---- */
+      function setBusy(t) {
+        var b = document.getElementById('statusBox');
+        b.className = 'status show info';
+        b.innerHTML = '<span class="spinner"></span> ' + esc(t);
+      }
+
+      function showError(e) {
+        var b = document.getElementById('statusBox');
+        b.className = 'status show error';
+        b.textContent = errMsg(e);
+      }
+
+      function showSuccess(m) {
+        var b = document.getElementById('statusBox');
+        b.className = 'status show success';
+        b.textContent = m;
+      }
+
+      function setSyncText(html) {
+        document.getElementById('syncText').innerHTML = html;
+      }
+
+      function errMsg(e) {
+        return (e && e.message) ? e.message : String(e || 'Error desconocido');
+      }
+
+      function esc(v) {
+        return String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      }
+
+      function num(v) { var n = Number(v||0); return isNaN(n)?0:n; }
+
+      window.addEventListener('load', init);
+    </script>
+  </body>
+</html>

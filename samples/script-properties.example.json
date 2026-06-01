@@ -1,0 +1,8 @@
+{
+  "EMAIL_DESTINO": "usuario.demo@empresa.com",
+  "EMAIL_ALERTAS": "alertas.demo@empresa.com",
+  "WA_ID_INSTANCE": "ID_INSTANCE_DEMO",
+  "WA_API_TOKEN": "TOKEN_DEMO",
+  "WA_CHAT_ID": "593999999999@c.us",
+  "ZONA_HORARIA": "America/Guayaquil"
+}
