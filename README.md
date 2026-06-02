@@ -1,1348 +1,778 @@
-Gestión de Tareas Operativas — Google Apps Script Automation Suite
-![Google Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=000)
-![HTML Service](https://img.shields.io/badge/HTML%20Service-FF5722?style=for-the-badge&logo=html5&logoColor=white)
-![Gmail](https://img.shields.io/badge/GmailApp-EA4335?style=for-the-badge&logo=gmail&logoColor=white)
-![WhatsApp](https://img.shields.io/badge/Green%20API%20WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
-Suite operativa desarrollada en Google Apps Script sobre Google Sheets para centralizar la gestión de tareas, sincronizar información entre hojas, generar alertas de órdenes de compra faltantes, controlar facturas pendientes, crear observaciones automáticas y programar recordatorios por WhatsApp mediante Green API.
-El proyecto transforma una hoja de cálculo operativa en una herramienta interna con menú personalizado, automatizaciones, triggers, formularios, dashboards, alertas, reportes, logs y módulos independientes para procesos administrativos reales.
+# Gestión de Tareas Operativas
+
+Suite de automatización desarrollada en **Google Apps Script** sobre **Google Sheets** para centralizar tareas operativas, sincronizar información, generar alertas, controlar facturas pendientes, crear observaciones automáticas y programar recordatorios por WhatsApp mediante Green API.
+
+![Google Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-4285F4?style=flat-square&logo=google&logoColor=white)
+![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=flat-square&logo=googlesheets&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=000)
+![HTML Service](https://img.shields.io/badge/HTML%20Service-FF5722?style=flat-square&logo=html5&logoColor=white)
+![Gmail](https://img.shields.io/badge/GmailApp-EA4335?style=flat-square&logo=gmail&logoColor=white)
+![WhatsApp](https://img.shields.io/badge/Green%20API%20WhatsApp-25D366?style=flat-square&logo=whatsapp&logoColor=white)
+
 ---
-Vista general del sistema
-Menú principal del sistema
-![Menú principal del sistema](docs/screenshots/01-menu-sistema.png)
-Task Manager
-![Task Manager](docs/screenshots/02-task-manager.png)
-Dashboard operativo
-![Dashboard operativo](docs/screenshots/03-dashboard.png)
-Alertas de órdenes de compra faltantes
-![Alertas OC](docs/screenshots/04-alertas-oc.png)
-Facturas por compartir
-![Facturas por compartir](docs/screenshots/05-facturas.png)
-Observaciones automáticas
-![Observaciones automáticas](docs/screenshots/06-observaciones.png)
-WhatsApp Auto Manager
-![WhatsApp Auto Manager](docs/screenshots/07-whatsapp-auto.png)
-Programador visual de WhatsApp
-![Programador WhatsApp](docs/screenshots/08-programador-whatsapp.png)
+
+## Vista general
+
+El proyecto convierte una hoja de cálculo operativa en una herramienta interna con menú personalizado, automatizaciones, formularios, dashboards, alertas, reportes, logs y módulos independientes para procesos administrativos reales.
+
+### Menú principal del sistema
+
+<img src="docs/screenshots/01-menu-sistema.png" alt="Menú principal del sistema" width="850">
+
+### Task Manager
+
+<img src="docs/screenshots/02-task-manager.png" alt="Task Manager" width="850">
+
+### Dashboard operativo
+
+<img src="docs/screenshots/03-dashboard.png" alt="Dashboard operativo" width="850">
+
+### Alertas de órdenes de compra faltantes
+
+<img src="docs/screenshots/04-alertas-oc.png" alt="Alertas de órdenes de compra faltantes" width="850">
+
+### Facturas por compartir
+
+<img src="docs/screenshots/05-facturas.png" alt="Facturas por compartir" width="850">
+
+### Observaciones automáticas
+
+<img src="docs/screenshots/06-observaciones.png" alt="Observaciones automáticas" width="850">
+
+### WhatsApp Auto Manager
+
+<img src="docs/screenshots/07-whatsapp-auto.png" alt="WhatsApp Auto Manager" width="850">
+
+### Programador visual de WhatsApp
+
+<img src="docs/screenshots/08-programador-whatsapp.png" alt="Programador visual de WhatsApp" width="850">
+
 ---
-Tabla de contenido
-Objetivo del proyecto
-Problema identificado
-Solución desarrollada
-Funcionalidades principales
-Arquitectura general
-Estructura del repositorio
-Módulos del sistema
-Stack técnico
-Hojas utilizadas
-Flujo operativo principal
-Instalación
-Configuración inicial en Google Sheets
-Activadores recomendados
-Configuración de WhatsApp
-Seguridad y privacidad
-Capturas requeridas
-Impacto operativo
-Retos técnicos resueltos
-Roadmap
-Aprendizajes técnicos
-Autor
-Licencia
+
+## Tabla de contenido
+
+- [Objetivo del proyecto](#objetivo-del-proyecto)
+- [Problema identificado](#problema-identificado)
+- [Solución desarrollada](#solución-desarrollada)
+- [Funcionalidades principales](#funcionalidades-principales)
+- [Arquitectura general](#arquitectura-general)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Módulos del sistema](#módulos-del-sistema)
+- [Stack técnico](#stack-técnico)
+- [Hojas utilizadas](#hojas-utilizadas)
+- [Flujo operativo principal](#flujo-operativo-principal)
+- [Instalación](#instalación)
+- [Configuración inicial](#configuración-inicial)
+- [Activadores recomendados](#activadores-recomendados)
+- [Configuración de WhatsApp](#configuración-de-whatsapp)
+- [Seguridad y privacidad](#seguridad-y-privacidad)
+- [Impacto operativo](#impacto-operativo)
+- [Retos técnicos resueltos](#retos-técnicos-resueltos)
+- [Roadmap](#roadmap)
+- [Aprendizajes técnicos](#aprendizajes-técnicos)
+- [Autor](#autor)
+- [Licencia](#licencia)
+
 ---
-Objetivo del proyecto
-El objetivo principal fue automatizar procesos operativos que antes dependían de revisión manual en Google Sheets, correos y seguimiento individual.
+
+## Objetivo del proyecto
+
+Automatizar procesos operativos que antes dependían de revisión manual en Google Sheets, correos y seguimiento individual.
+
 La solución permite:
-Gestionar tareas por categoría, criticidad, frecuencia y vencimiento.
-Sincronizar información entre las hojas `TAREAS` y `GENERAL`.
-Detectar tareas sin orden de compra.
-Enviar alertas automáticas por correo.
-Controlar facturas pendientes de compartir.
-Extraer datos desde correos de Gmail.
-Generar observaciones estandarizadas por tarea u orden.
-Exportar información operativa a una hoja plana `JT_EXPORT`.
-Programar mensajes automáticos por WhatsApp.
-Mantener logs de notificaciones, envíos y procesos.
-Centralizar procesos administrativos dentro de un menú único.
+
+- Gestionar tareas por categoría, criticidad, frecuencia y vencimiento.
+- Sincronizar información entre las hojas `TAREAS` y `GENERAL`.
+- Detectar tareas sin orden de compra.
+- Enviar alertas automáticas por correo.
+- Controlar facturas pendientes de compartir.
+- Extraer datos desde correos de Gmail.
+- Generar observaciones estandarizadas por tarea u orden.
+- Exportar información operativa a una hoja plana `JT_EXPORT`.
+- Programar mensajes automáticos por WhatsApp.
+- Mantener logs de notificaciones, envíos y procesos.
+- Centralizar procesos administrativos dentro de un menú único.
+
 ---
-Problema identificado
+
+## Problema identificado
+
 Antes del sistema, varias actividades se realizaban manualmente:
-Revisión de tareas en diferentes hojas.
-Validación manual de órdenes de compra faltantes.
-Seguimiento de facturas pendientes de compartir.
-Cruce manual entre tareas, órdenes, proveedores e ingresos.
-Generación repetitiva de observaciones.
-Recordatorios por correo o WhatsApp sin control centralizado.
-Falta de trazabilidad sobre notificaciones enviadas.
-Riesgo de omisiones por depender de revisión visual.
-Dificultad para priorizar tareas urgentes o críticas.
-Duplicidad de información entre hojas operativas.
-Pérdida de tiempo en tareas administrativas repetitivas.
-Esto generaba pérdida de tiempo, reprocesos, errores humanos y dificultad para priorizar pendientes.
+
+- Revisión de tareas en diferentes hojas.
+- Validación manual de órdenes de compra faltantes.
+- Seguimiento de facturas pendientes de compartir.
+- Cruce manual entre tareas, órdenes, proveedores e ingresos.
+- Generación repetitiva de observaciones.
+- Recordatorios por correo o WhatsApp sin control centralizado.
+- Falta de trazabilidad sobre notificaciones enviadas.
+- Riesgo de omisiones por depender de revisión visual.
+- Dificultad para priorizar tareas urgentes o críticas.
+- Duplicidad de información entre hojas operativas.
+- Pérdida de tiempo en tareas administrativas repetitivas.
+
+Esto generaba reprocesos, errores humanos y baja visibilidad sobre pendientes críticos.
+
 ---
-Solución desarrollada
-Se desarrolló una suite modular en Google Apps Script, integrada directamente en Google Sheets mediante un menú personalizado llamado Sistema.
+
+## Solución desarrollada
+
+Se desarrolló una suite modular en Google Apps Script, integrada directamente en Google Sheets mediante un menú personalizado llamado **Sistema**.
+
 Desde este menú se pueden ejecutar los principales módulos:
-Sincronización operativa.
-Task Manager.
-Alertas de órdenes de compra.
-Facturas por compartir.
-Observaciones automáticas.
-Exportación JT.
-WhatsApp Auto Manager.
+
+- Sincronización operativa.
+- Task Manager.
+- Alertas de órdenes de compra.
+- Facturas por compartir.
+- Observaciones automáticas.
+- Exportación JT.
+- WhatsApp Auto Manager.
+
 La solución aprovecha servicios nativos de Google Workspace y una API externa para WhatsApp.
----
-Funcionalidades principales
-Gestión de tareas
-Creación de tareas operativas.
-Clasificación por categoría.
-Criticidad:
-Baja.
-Media.
-Alta.
-Crítica.
-Frecuencia:
-Única.
-Diaria.
-Semanal.
-Mensual.
-Fecha de vencimiento.
-Hora de recordatorio.
-Tareas pendientes.
-Tareas vencidas.
-Tareas de hoy.
-Tareas de la semana.
-Tareas completadas.
-Reactivación de tareas.
-Dashboard de resumen.
-Envío de reportes por correo.
-Log de notificaciones.
----
-Sincronización TAREAS ↔ GENERAL
-Sincronización bidireccional entre hojas.
-Actualización automática al editar.
-Cruce de datos por identificador de tarea.
-Conversión automática a mayúsculas.
-Validación de configuración.
-Guardado de última posición por hoja.
-Auto-scroll operativo.
-Registro del último disparo.
-Uso de `LockService` para reducir conflictos de edición.
-Limpieza y normalización de datos.
----
-Alertas de órdenes de compra faltantes
-Detección automática de tareas sin OC.
-Identificación de cabeceras de tarea.
-Cálculo de antigüedad.
-Clasificación por nivel de riesgo.
-Priorización de departamentos críticos.
-Envío de correo agrupado por tarea.
-Correo en texto plano y HTML.
-Generación de debug para revisión.
-Trigger diario configurable.
----
-Facturas por compartir
-Revisión automática de correos en Gmail.
-Búsqueda por remitente y asunto.
-Extracción de datos desde tablas HTML.
-Registro de facturas pendientes.
-Control de duplicados por factura e ingreso.
-Cálculo de días sin compartir.
-Clasificación de estado:
-Nuevo.
-Pendiente.
-Urgente.
-Crítico.
-Compartida.
-Recordatorios automáticos.
-Alertas por correo.
-Integración con WhatsApp.
-Etiqueta de Gmail para control de procesados.
----
-Observaciones automáticas
-Generación de observaciones por tarea.
-Generación de observaciones por orden de compra.
-Sidebar integrado en Google Sheets.
-Configuración de autorizadores por departamento.
-Restauración de configuración por defecto.
-Formato estándar para proveedores y órdenes.
-Lectura dinámica de datos desde la hoja `GENERAL`.
-Generación de textos listos para copiar y pegar.
----
-Exportación JT
-Exportación de ítems desde `GENERAL`.
-Creación de hoja plana `JT_EXPORT`.
-Asociación de ítems con número de tarea.
-Exportación de:
-Código.
-Detalle.
-Cantidad.
-Proveedor.
-Orden de compra.
-Fila de origen.
-Fecha de exportación.
-Trigger opcional cada 5 minutos.
-Estructura plana útil para análisis, filtros y reportes.
----
-WhatsApp Auto Manager
-Configuración de conexión con Green API.
-Sincronización de contactos.
-Gestión de contactos activos.
-Creación de plantillas.
-Programación de mensajes.
-Envíos únicos, diarios, semanales o mensuales.
-Procesamiento de cola de envíos.
-Scheduler automático.
-Validación de conexión.
-Logs de envío.
-Ventana visual para programar campañas.
-Búsqueda paginada de contactos.
-Uso de variables dinámicas en plantillas.
----
-Arquitectura general
-```txt
 
+---
+
+## Funcionalidades principales
+
+### Gestión de tareas
+
+- Creación, edición, finalización y reactivación de tareas.
+- Clasificación por categoría, criticidad y frecuencia.
+- Control de vencimientos, recordatorios y tareas completadas.
+- Dashboard de resumen operativo.
+- Envío de reportes por correo.
+- Registro de notificaciones.
+
+### Sincronización TAREAS ↔ GENERAL
+
+- Sincronización bidireccional entre hojas.
+- Actualización automática al editar.
+- Cruce de datos por identificador de tarea.
+- Conversión automática a mayúsculas.
+- Guardado de última posición por hoja.
+- Auto-scroll operativo.
+- Uso de `LockService` para reducir conflictos de edición.
+- Limpieza y normalización de datos.
+
+### Alertas de órdenes de compra faltantes
+
+- Detección automática de tareas sin OC.
+- Identificación de cabeceras de tarea.
+- Cálculo de antigüedad.
+- Clasificación por nivel de riesgo.
+- Priorización de departamentos críticos.
+- Envío de correo agrupado por tarea.
+- Generación de debug para revisión.
+- Trigger diario configurable.
+
+### Facturas por compartir
+
+- Revisión automática de correos en Gmail.
+- Búsqueda por remitente y asunto.
+- Extracción de datos desde tablas HTML.
+- Registro de facturas pendientes.
+- Control de duplicados por factura e ingreso.
+- Cálculo de días sin compartir.
+- Clasificación de estado operativo.
+- Recordatorios automáticos.
+- Integración con WhatsApp.
+- Etiqueta de Gmail para control de procesados.
+
+### Observaciones automáticas
+
+- Generación de observaciones por tarea.
+- Generación de observaciones por orden de compra.
+- Sidebar integrado en Google Sheets.
+- Configuración de autorizadores por departamento.
+- Lectura dinámica de datos desde la hoja `GENERAL`.
+- Generación de textos listos para copiar y pegar.
+
+### Exportación JT
+
+- Exportación de ítems desde `GENERAL`.
+- Creación de hoja plana `JT_EXPORT`.
+- Asociación de ítems con número de tarea.
+- Exportación de código, detalle, cantidad, proveedor, orden de compra, fila de origen y fecha.
+- Estructura útil para análisis, filtros y reportes.
+
+### WhatsApp Auto Manager
+
+- Configuración de conexión con Green API.
+- Sincronización de contactos.
+- Gestión de contactos activos.
+- Creación de plantillas.
+- Programación de mensajes.
+- Envíos únicos, diarios, semanales o mensuales.
+- Procesamiento de cola de envíos.
+- Validación de conexión.
+- Logs de envío.
+- Uso de variables dinámicas en plantillas.
+
+---
+
+## Arquitectura general
+
+```txt
 Usuario
-
   ↓
-
 Google Sheets
-
   ↓
-
 Menú personalizado "Sistema"
-
   ↓
-
 Google Apps Script
-
   ├── Core del sistema
-
   ├── Sincronización TAREAS ↔ GENERAL
-
   ├── Task Manager
-
   ├── Alertas OC
-
   ├── Facturas por compartir
-
   ├── Observaciones automáticas
-
   ├── Exportación JT
-
   └── WhatsApp Auto Manager
-
   ↓
-
 Servicios externos
-
   ├── Gmail
-
   ├── MailApp
-
   ├── SpreadsheetApp
-
   ├── HtmlService
-
   ├── PropertiesService
-
   ├── LockService
-
   ├── UrlFetchApp
-
   └── Green API
-
 ```
----
-Estructura del repositorio
-```txt
 
+---
+
+## Estructura del repositorio
+
+```txt
 gestion-tareas-operativas-apps-script/
-
 │
-
 ├── README.md
-
 ├── CHANGELOG.md
-
 ├── LICENSE
-
 ├── .gitignore
-
 ├── .clasp.example.json
-
 ├── appsscript.example.json
-
 │
-
 ├── src/
-
 │   ├── 00_APP_CONFIG.example.gs
-
 │   ├── 00_CORE_REFACTORED.gs
-
 │   ├── 01_SYNC.gs
-
 │   ├── 02_OC_ALERT.gs
-
 │   ├── 03_OBSERVACIONES_V3.gs
-
 │   ├── 04_GTX_EXPORT.gs
-
 │   ├── 05_TASK_MANAGER.gs
-
 │   ├── 06_FACTURAS.gs
-
 │   ├── 07_WHATSAPP_AUTO_MANAGER.gs
-
 │   └── WAM_PROGRAMADOR_DIALOG.html
-
 │
-
 ├── docs/
-
 │   ├── architecture.md
-
 │   ├── deployment.md
-
 │   ├── user-guide.md
-
 │   ├── security.md
-
 │   └── screenshots/
-
 │       ├── 01-menu-sistema.png
-
 │       ├── 02-task-manager.png
-
 │       ├── 03-dashboard.png
-
 │       ├── 04-alertas-oc.png
-
 │       ├── 05-facturas.png
-
 │       ├── 06-observaciones.png
-
 │       ├── 07-whatsapp-auto.png
-
 │       └── 08-programador-whatsapp.png
-
 │
-
 └── samples/
-
     └── script-properties.example.json
-
 ```
+
 ---
-Módulos del sistema
-1. Core del sistema
-Archivo:
-```txt
 
-src/00_CORE_REFACTORED.gs
+## Módulos del sistema
 
-```
-Responsabilidades:
-Menú principal del sistema.
-Integración de módulos.
-Utilidades compartidas.
-Normalización de texto.
-Validación de celdas vacías.
-Cálculo de días.
-Formato de valores.
-Limpieza de triggers.
-Detector de cabeceras de tarea.
-Funciones auxiliares para hojas.
-Funciones de apoyo para UI y mensajes.
+### 1. Core del sistema
+
+**Archivo:** `src/00_CORE_REFACTORED.gs`
+
+Responsabilidades principales:
+
+- Crear el menú principal.
+- Integrar los módulos del sistema.
+- Centralizar utilidades compartidas.
+- Normalizar texto y valores.
+- Validar celdas vacías.
+- Calcular días y formatear valores.
+- Limpiar triggers.
+- Detectar cabeceras de tarea.
+- Apoyar funciones de UI y mensajes.
+
 Funciones destacadas:
+
 ```txt
-
 crearMenuSistema()
-
 onOpen(e)
-
 onSelectionChange(e)
-
 trigEdit(e)
-
 installTriggers()
-
 GENERAL_isTaskHeaderRow_()
-
 clearTriggersByHandler_()
-
 isBlank_()
-
 normalizeTaskId_()
-
 normalizeText_()
-
 escapeHtml_()
-
 daysBetween_()
-
 formatMoney_()
-
 ```
----
-2. Configuración base
-Archivo:
-```txt
 
-src/00_APP_CONFIG.example.gs
+### 2. Configuración base
 
-```
-Responsabilidades:
-Definir zona horaria.
-Centralizar nombres de hojas.
-Mantener una única fuente de configuración.
-Evitar nombres quemados en múltiples scripts.
-Facilitar adaptación a otros entornos.
+**Archivo:** `src/00_APP_CONFIG.example.gs`
+
+Responsabilidades principales:
+
+- Definir zona horaria.
+- Centralizar nombres de hojas.
+- Mantener una única fuente de configuración.
+- Evitar nombres quemados en múltiples scripts.
+- Facilitar adaptación a otros entornos.
+
 Hojas configuradas:
-```txt
 
+```txt
 TAREAS
-
 GENERAL
-
 FAC POR COMPARTIR
-
 Configuración
-
 Completadas
-
 Dashboard
-
 Log Correos
-
 JT_EXPORT
-
 WA_AUTO_CFG
-
 WA_AUTO_CONTACTOS
-
 WA_AUTO_PROGRAMACION
-
 WA_AUTO_PLANTILLAS
-
 WA_AUTO_LOG
-
 ```
----
-3. Sincronización
-Archivo:
-```txt
 
-src/01_SYNC.gs
+### 3. Sincronización
 
-```
-Responsabilidades:
-Sincronizar datos entre `TAREAS` y `GENERAL`.
-Detectar ediciones relevantes.
-Actualizar datos relacionados.
-Convertir texto a mayúsculas.
-Guardar posiciones visitadas.
-Ejecutar auto-scroll.
-Validar configuración.
-Registrar última ejecución.
-Evitar ediciones duplicadas o no relevantes.
+**Archivo:** `src/01_SYNC.gs`
+
+Responsabilidades principales:
+
+- Sincronizar datos entre `TAREAS` y `GENERAL`.
+- Detectar ediciones relevantes.
+- Actualizar datos relacionados.
+- Convertir texto a mayúsculas.
+- Guardar posiciones visitadas.
+- Ejecutar auto-scroll.
+- Validar configuración.
+- Registrar última ejecución.
+
 Funciones destacadas:
-```txt
 
+```txt
 _SYNC_handleEdit(e)
-
 _SYNC_handleSelectionChange(e)
-
 _SYNC_onOpenLogic(e)
-
 syncAllNow()
-
 validateSetup()
-
 showLastRun()
-
 _SYNC_updateFromTareas()
-
 _SYNC_updateFromGeneral()
-
 _SYNC_buildGenMap()
-
 _SYNC_buildTarMap()
-
 ```
----
-4. Alertas de OC
-Archivo:
-```txt
 
-src/02_OC_ALERT.gs
+### 4. Alertas de OC
 
-```
-Responsabilidades:
-Detectar tareas sin orden de compra.
-Calcular días transcurridos.
-Clasificar nivel de riesgo.
-Agrupar alertas por tarea.
-Enviar correo HTML.
-Crear trigger diario.
-Escribir información de debug.
-Priorizar departamentos de alta importancia.
+**Archivo:** `src/02_OC_ALERT.gs`
+
+Responsabilidades principales:
+
+- Detectar tareas sin orden de compra.
+- Calcular días transcurridos.
+- Clasificar nivel de riesgo.
+- Agrupar alertas por tarea.
+- Enviar correo HTML.
+- Crear trigger diario.
+- Escribir información de debug.
+- Priorizar departamentos críticos.
+
 Funciones destacadas:
-```txt
 
+```txt
 sendTareasSinOCEmail_V2()
-
 createDailyTrigger_V2()
-
 debugConteo_V2()
-
 _OC_parseTasks()
-
 _OC_buildHtmlEmail()
-
 _OC_buildPlainEmail()
-
 _OC_buildSubject()
-
 _OC_riskByDays()
-
 _OC_writeDebug()
-
 ```
----
-5. Observaciones automáticas
-Archivo:
-```txt
 
-src/03_OBSERVACIONES_V3.gs
+### 5. Observaciones automáticas
 
-```
-Responsabilidades:
-Generar observaciones para una tarea.
-Generar observaciones para una orden.
-Mostrar sidebar.
-Configurar autorizadores por departamento.
-Restaurar configuración por defecto.
-Leer datos desde `GENERAL`.
-Agrupar órdenes por proveedor.
-Preparar textos operativos listos para copiar.
+**Archivo:** `src/03_OBSERVACIONES_V3.gs`
+
+Responsabilidades principales:
+
+- Generar observaciones para una tarea.
+- Generar observaciones para una orden.
+- Mostrar sidebar.
+- Configurar autorizadores por departamento.
+- Restaurar configuración por defecto.
+- Leer datos desde `GENERAL`.
+- Agrupar órdenes por proveedor.
+- Preparar textos operativos listos para copiar.
+
 Funciones destacadas:
-```txt
 
+```txt
 obs3_abrirSidebar()
-
 obs3_abrirConfigSidebar()
-
 obs3_generarParaLaTarea(taskId)
-
 obs3_generarParaLaOrden(taskId)
-
 obs3_restaurarConfigAutorizadores()
-
 obs3_restaurarConfigPorDefectoConfirm()
-
 OBS3_addToSistemaMenu_()
-
 ```
----
-6. Exportación JT
-Archivo:
-```txt
 
-src/04_GTX_EXPORT.gs
+### 6. Exportación JT
 
-```
-Responsabilidades:
-Leer ítems de la hoja `GENERAL`.
-Detectar tareas.
-Crear hoja `JT_EXPORT`.
-Exportar registros planos.
-Guardar fila de origen.
-Registrar fecha de exportación.
-Preparar información para análisis o integración externa.
+**Archivo:** `src/04_GTX_EXPORT.gs`
+
+Responsabilidades principales:
+
+- Leer ítems de la hoja `GENERAL`.
+- Detectar tareas.
+- Crear hoja `JT_EXPORT`.
+- Exportar registros planos.
+- Guardar fila de origen.
+- Registrar fecha de exportación.
+- Preparar información para análisis o integración externa.
+
 Funciones destacadas:
-```txt
 
+```txt
 GTX_exportNow()
-
 GTX_setupTrigger_5min()
-
 GTX_deleteTriggers()
-
 ```
----
-7. Task Manager
-Archivo:
-```txt
 
-src/05_TASK_MANAGER.gs
+### 7. Task Manager
 
-```
-Responsabilidades:
-Inicializar hojas del gestor.
-Crear tareas.
-Editar tareas.
-Completar tareas.
-Reactivar tareas.
-Gestionar categorías.
-Aplicar formato visual.
-Colorear por criticidad.
-Enviar resumen diario.
-Enviar resumen semanal.
-Registrar logs de correos.
-Mostrar formularios HTML.
-Mantener dashboard operativo.
-Hojas principales:
-```txt
+**Archivo:** `src/05_TASK_MANAGER.gs`
 
-TAREAS
+Responsabilidades principales:
 
-Completadas
+- Inicializar hojas del gestor.
+- Crear, editar, completar y reactivar tareas.
+- Gestionar categorías.
+- Aplicar formato visual.
+- Colorear por criticidad.
+- Enviar resumen diario y semanal.
+- Registrar logs de correos.
+- Mostrar formularios HTML.
+- Mantener dashboard operativo.
 
-Configuración
-
-Dashboard
-
-Log Correos
-
-```
 Funciones destacadas:
+
 ```txt
-
 inicializarHojas()
-
 mostrarFormularioNuevaTarea()
-
 gestionarCategorias()
-
 obtenerCategorias()
-
 aplicarFormato()
-
 colorearPorCriticidad()
-
 enviarResumenDiario()
-
 enviarResumenSemanal()
-
-activarEnvioDiario()
-
-activarResumenSemanal()
-
-instalarMenuTaskManager()
-
+actualizarDashboard()
 ```
----
-8. Facturas por compartir
-Archivo:
-```txt
 
-src/06_FACTURAS.gs
+### 8. Facturas por compartir
 
-```
-Responsabilidades:
-Crear hoja `FAC POR COMPARTIR`.
-Revisar correos desde Gmail.
-Extraer datos desde tablas HTML.
-Registrar facturas pendientes.
-Evitar duplicados.
-Actualizar estados.
-Aplicar formato.
-Enviar recordatorios.
-Crear label de Gmail para procesados.
-Controlar días sin compartir.
-Preparar alertas escaladas.
+**Archivo:** `src/06_FACTURAS.gs`
+
+Responsabilidades principales:
+
+- Leer correos relacionados con facturas.
+- Extraer datos desde contenido HTML.
+- Registrar facturas pendientes.
+- Evitar duplicados.
+- Controlar estados.
+- Enviar recordatorios.
+- Registrar trazabilidad.
+
 Funciones destacadas:
+
 ```txt
-
-facInicializarHoja()
-
-facRevisarCorreos()
-
-facRevisarCorreosManual()
-
-_facExtraerFilasJ()
-
-_facActualizarEstados()
-
-_facAplicarFormato()
-
-_facBuildDupSet_()
-
-instalarMenuFacturas()
-
-crearMenuFacturas()
-
+FAC_procesarCorreos()
+FAC_enviarRecordatorios()
+FAC_actualizarEstados()
+FAC_marcarComoCompartida()
+FAC_crearTrigger()
+FAC_eliminarTriggers()
 ```
----
-9. WhatsApp Auto Manager
-Archivo:
-```txt
 
-src/07_WHATSAPP_AUTO_MANAGER.gs
+### 9. WhatsApp Auto Manager
 
-```
-Responsabilidades:
-Inicializar módulo WhatsApp.
-Crear hojas de configuración.
-Sincronizar contactos.
-Crear plantillas.
-Programar mensajes.
-Procesar cola de envíos.
-Validar conexión con Green API.
-Activar scheduler.
-Mantener logs.
-Manejar contactos activos.
-Configurar límite de envíos por corrida.
-Usar pausa entre envíos.
-Usar configuración compartida o local.
-Hojas principales:
-```txt
+**Archivo:** `src/07_WHATSAPP_AUTO_MANAGER.gs`
 
-WA_AUTO_CFG
+Responsabilidades principales:
 
-WA_AUTO_CONTACTOS
+- Administrar configuración de Green API.
+- Sincronizar contactos.
+- Crear y administrar plantillas.
+- Programar mensajes.
+- Procesar cola de envíos.
+- Validar conexión.
+- Registrar logs.
+- Gestionar variables dinámicas.
 
-WA_AUTO_PROGRAMACION
-
-WA_AUTO_PLANTILLAS
-
-WA_AUTO_LOG
-
-```
 Funciones destacadas:
+
 ```txt
-
-WAM_inicializarModulo()
-
-WAM_abrirVentanaProgramador()
-
-WAM_validarConexionUI()
-
-WAM_sincronizarContactosUI()
-
-WAM_procesarProgramacionUI()
-
-WAM_activarScheduler()
-
-WAM_desactivarScheduler()
-
-WAM_resetEstadoEjecucion()
-
-WAM_enviarPruebaUI()
-
-WAM_crearMenuStandalone()
-
+WAM_abrirManager()
+WAM_guardarConfig()
+WAM_probarConexion()
+WAM_sincronizarContactos()
+WAM_crearPlantilla()
+WAM_programarMensaje()
+WAM_procesarCola()
+WAM_crearTrigger()
+WAM_eliminarTriggers()
 ```
----
-10. Ventana HTML de WhatsApp
-Archivo:
-```txt
 
-src/WAM_PROGRAMADOR_DIALOG.html
-
-```
-Responsabilidades:
-Mostrar interfaz visual para programación.
-Buscar contactos.
-Seleccionar destinatarios.
-Configurar frecuencia.
-Preparar mensaje.
-Enviar datos al backend Apps Script.
-Mostrar estados de carga, éxito o error.
-Facilitar campañas manuales o programadas.
 ---
-Stack técnico
-| Área | Tecnología |
+
+## Stack técnico
+
+| Tecnología | Uso |
 |---|---|
-| Backend | Google Apps Script |
-| Interfaz principal | Google Sheets UI |
-| Interfaz secundaria | HTML Service |
-| Base operativa | Google Sheets |
-| Automatización | Apps Script Triggers |
-| Correo | GmailApp, MailApp |
-| WhatsApp | Green API |
-| Configuración | PropertiesService |
-| Control de concurrencia | LockService |
-| HTTP externo | UrlFetchApp |
-| Utilidades | Utilities |
-| Control de versiones | Git, GitHub, clasp |
+| Google Apps Script | Automatización principal |
+| JavaScript | Lógica del sistema |
+| Google Sheets | Interfaz operativa y almacenamiento |
+| GmailApp | Lectura de correos |
+| MailApp | Envío de alertas |
+| HtmlService | Formularios, sidebars y diálogos |
+| PropertiesService | Configuración persistente |
+| LockService | Control de concurrencia |
+| UrlFetchApp | Integración con Green API |
+| Green API | Envío de mensajes por WhatsApp |
+| clasp | Versionamiento local opcional |
+
 ---
-Hojas utilizadas
-```txt
 
-TAREAS
+## Hojas utilizadas
 
-GENERAL
+| Hoja | Propósito |
+|---|---|
+| `TAREAS` | Gestión principal de tareas |
+| `GENERAL` | Información operativa consolidada |
+| `FAC POR COMPARTIR` | Control de facturas pendientes |
+| `Configuración` | Categorías y parámetros |
+| `Completadas` | Historial de tareas cerradas |
+| `Dashboard` | Indicadores y resumen |
+| `Log Correos` | Registro de notificaciones |
+| `JT_EXPORT` | Exportación plana de información |
+| `WA_AUTO_CFG` | Configuración de WhatsApp |
+| `WA_AUTO_CONTACTOS` | Contactos sincronizados |
+| `WA_AUTO_PROGRAMACION` | Mensajes programados |
+| `WA_AUTO_PLANTILLAS` | Plantillas de mensajes |
+| `WA_AUTO_LOG` | Logs de WhatsApp |
 
-FAC POR COMPARTIR
-
-Configuración
-
-Completadas
-
-Dashboard
-
-Log Correos
-
-JT_EXPORT
-
-WA_AUTO_CFG
-
-WA_AUTO_CONTACTOS
-
-WA_AUTO_PROGRAMACION
-
-WA_AUTO_PLANTILLAS
-
-WA_AUTO_LOG
-
-```
 ---
-Modelo de datos general
-Hoja `TAREAS`
-Uso principal:
-Registro de tareas operativas.
-Seguimiento de criticidad.
-Control de frecuencia.
-Estado de cada tarea.
-Fechas de vencimiento.
-Notas y última notificación.
-Campos principales:
+
+## Flujo operativo principal
+
 ```txt
-
-ID
-
-Tarea
-
-Descripción
-
-Categoría
-
-Criticidad
-
-Frecuencia
-
-Fecha Creación
-
-Fecha Vencimiento
-
-Hora Recordatorio
-
-Día Semana
-
-Día Mes
-
-Estado
-
-Notas
-
-Última Notificación
-
-```
----
-Hoja `GENERAL`
-Uso principal:
-Fuente operativa para tareas, proveedores, órdenes, ítems y detalles.
-Base para sincronización, alertas, observaciones y exportación.
-Campos utilizados por los módulos:
-```txt
-
-Código
-
-Detalle
-
-Cantidad
-
-Proveedor
-
-Precio
-
-OC
-
-Departamento
-
-Solicitante
-
-Detalle de tarea
-
-```
----
-Hoja `FAC POR COMPARTIR`
-Uso principal:
-Registro y control de facturas pendientes.
-Campos principales:
-```txt
-
-Número
-
-Proveedor
-
-Número de Factura
-
-Fecha de Factura
-
-Orden de Compra
-
-Número de Ingreso
-
-Número de Tarea
-
-Responsable
-
-Factura Compartida
-
-Fecha Registro
-
-Días sin Compartir
-
-Estado
-
-```
----
-Hojas WhatsApp Auto
-Uso principal:
-Configuración.
-Contactos.
-Programaciones.
-Plantillas.
-Logs.
-Hojas:
-```txt
-
-WA_AUTO_CFG
-
-WA_AUTO_CONTACTOS
-
-WA_AUTO_PROGRAMACION
-
-WA_AUTO_PLANTILLAS
-
-WA_AUTO_LOG
-
-```
----
-Flujo operativo principal
-```txt
-
-1. El usuario abre Google Sheets.
-
-2. El menú Sistema se carga automáticamente.
-
+1. El usuario trabaja en Google Sheets.
+2. El menú "Sistema" carga los módulos disponibles.
 3. El usuario crea, consulta o actualiza tareas.
-
-4. El módulo Sync cruza datos entre TAREAS y GENERAL.
-
-5. El sistema detecta tareas sin orden de compra.
-
-6. El módulo OC Alert envía alertas por correo.
-
-7. El módulo Facturas revisa Gmail y registra pendientes.
-
-8. El sistema actualiza estados de facturas.
-
-9. El módulo Observaciones genera textos estandarizados.
-
-10. El módulo WhatsApp Auto programa recordatorios o campañas.
-
-11. Los logs registran actividad relevante.
-
+4. El sistema sincroniza datos entre hojas.
+5. Los módulos detectan pendientes, facturas u órdenes sin OC.
+6. Se generan alertas, observaciones o reportes.
+7. Los triggers ejecutan procesos programados.
+8. Los logs registran cada operación relevante.
 ```
+
 ---
-Flujo de alertas OC
-```txt
 
-1. Se analiza la hoja GENERAL.
+## Instalación
 
-2. Se detectan cabeceras de tarea.
+### 1. Clonar el repositorio
 
-3. Se agrupan ítems por tarea.
-
-4. Se identifican ítems sin OC.
-
-5. Se calcula antigüedad.
-
-6. Se asigna riesgo.
-
-7. Se ordenan alertas por prioridad.
-
-8. Se envía correo agrupado.
-
-```
----
-Flujo de facturas
-```txt
-
-1. El módulo busca correos con asunto configurado.
-
-2. Lee el cuerpo HTML del correo.
-
-3. Extrae tablas.
-
-4. Filtra filas marcadas para seguimiento.
-
-5. Valida duplicados.
-
-6. Registra facturas nuevas.
-
-7. Calcula días sin compartir.
-
-8. Actualiza estado.
-
-9. Envía recordatorios si corresponde.
-
-```
----
-Flujo de WhatsApp Auto
-```txt
-
-1. Se inicializa el módulo.
-
-2. Se valida conexión con Green API.
-
-3. Se sincronizan contactos.
-
-4. Se crean plantillas.
-
-5. Se programa una campaña.
-
-6. El scheduler revisa la cola.
-
-7. Se envían mensajes pendientes.
-
-8. Se registra resultado en el log.
-
-```
----
-Instalación
-1. Clonar repositorio
 ```bash
-
 git clone https://github.com/eslay07/gestion-tareas-operativas-apps-script.git
-
 cd gestion-tareas-operativas-apps-script
-
 ```
-2. Instalar clasp
+
+### 2. Instalar clasp
+
 ```bash
-
-npm install @google/clasp -g
-
-```
-3. Iniciar sesión en Google
-```bash
-
+npm install -g @google/clasp
 clasp login
-
 ```
-4. Vincular con Apps Script
-Crear archivo `.clasp.json` local basado en `.clasp.example.json`:
-```json
 
-{
+### 3. Configurar el proyecto
 
-  "scriptId": "TU_SCRIPT_ID_REAL",
+Copiar los archivos de ejemplo y completar los valores reales en el entorno privado:
 
-  "rootDir": "src"
-
-}
-
-```
-5. Subir código a Apps Script
 ```bash
+cp .clasp.example.json .clasp.json
+cp appsscript.example.json appsscript.json
+cp samples/script-properties.example.json samples/script-properties.local.json
+```
 
+### 4. Subir a Apps Script
+
+```bash
 clasp push
-
 ```
+
 ---
-Configuración inicial en Google Sheets
-Después de cargar el código en Apps Script, ejecutar manualmente las funciones iniciales:
-```txt
 
-crearMenuSistema()
+## Configuración inicial
 
-installTriggers()
+En Google Sheets:
 
-inicializarHojas()
+1. Crear o abrir la hoja operativa.
+2. Vincular el proyecto de Apps Script.
+3. Agregar los archivos `.gs` y `.html`.
+4. Ejecutar `onOpen()` o recargar la hoja.
+5. Verificar que aparezca el menú **Sistema**.
+6. Ejecutar la configuración inicial del Task Manager.
+7. Validar que existan las hojas requeridas.
+8. Revisar permisos de Gmail, Sheets y servicios externos.
 
-facInicializarHoja()
-
-WAM_inicializarModulo()
-
-```
-Luego, desde el menú Sistema, validar cada módulo:
-```txt
-
-Sistema → Sync / Compras → Validar configuración
-
-Sistema → Task Manager → Inicializar hojas
-
-Sistema → Facturas → Inicializar hoja Facturas
-
-Sistema → WhatsApp Auto → Inicializar módulo
-
-Sistema → WhatsApp Auto → Validar conexión Green API
-
-```
 ---
-Activadores recomendados
-Desde el menú del sistema:
-```txt
 
-Sistema → Sync / Compras → Instalar / arreglar activadores
+## Activadores recomendados
 
-Sistema → Sync / Compras → Crear trigger diario OC
+| Proceso | Frecuencia sugerida |
+|---|---|
+| Sincronización operativa | Al editar |
+| Alertas OC | Diario |
+| Facturas por compartir | Cada 15 a 60 minutos |
+| Exportación JT | Cada 5 minutos, si aplica |
+| WhatsApp Auto Manager | Cada 5 a 15 minutos |
+| Reporte diario | Diario |
+| Reporte semanal | Semanal |
 
-Sistema → Sync / Compras → Instalar trigger GTX 5 min
-
-Sistema → Task Manager → Activar envío diario
-
-Sistema → Task Manager → Activar resumen semanal
-
-Sistema → Facturas → Activar revisión de correos
-
-Sistema → Facturas → Activar recordatorios
-
-Sistema → WhatsApp Auto → Activar scheduler
-
-```
 ---
-Configuración de WhatsApp
-El módulo WhatsApp Auto puede usar configuración compartida desde la hoja `Configuración`:
-```txt
 
-B6 = ID Instance
+## Configuración de WhatsApp
 
-B7 = API Token
+El módulo de WhatsApp requiere una cuenta activa de Green API.
 
-```
-También puede usar configuración local en la hoja:
-```txt
+Parámetros necesarios:
 
-WA_AUTO_CFG
+- `INSTANCE_ID`
+- `API_TOKEN`
+- Número autorizado.
+- Contactos sincronizados.
+- Plantillas configuradas.
+- Trigger de procesamiento activo.
 
-```
-Por seguridad, las credenciales reales no deben estar publicadas en el repositorio.
+> Los tokens, IDs reales y credenciales no deben subirse al repositorio.
+
 ---
-Variables de configuración sugeridas
-Archivo de ejemplo:
-```txt
 
-samples/script-properties.example.json
+## Seguridad y privacidad
 
-```
-Contenido sugerido:
-```json
+Este repositorio no debe contener:
 
-{
+- Correos reales.
+- Tokens de API.
+- IDs de instancias.
+- Contraseñas.
+- Datos internos de proveedores.
+- Información financiera real.
+- URLs privadas.
+- Nombres sensibles de colaboradores.
 
-  "EMAIL_DESTINO": "usuario.demo@empresa.com",
+Para publicar el proyecto se usan archivos `.example` y datos ficticios.
 
-  "EMAIL_ALERTAS": "alertas.demo@empresa.com",
-
-  "WA_ID_INSTANCE": "ID_INSTANCE_DEMO",
-
-  "WA_API_TOKEN": "TOKEN_DEMO",
-
-  "WA_CHAT_ID": "593999999999@c.us",
-
-  "ZONA_HORARIA": "America/Guayaquil"
-
-}
-
-```
 ---
-Seguridad y privacidad
-Este repositorio debe publicarse únicamente con datos ficticios o sanitizados.
-No subir:
-```txt
 
-Correos corporativos reales
+## Impacto operativo
 
-Tokens de Green API
+El sistema permite:
 
-ID Instance real
+- Reducir revisión manual.
+- Mejorar trazabilidad.
+- Centralizar procesos repetitivos.
+- Disminuir riesgo de omisiones.
+- Priorizar tareas críticas.
+- Agilizar generación de observaciones.
+- Automatizar recordatorios.
+- Estandarizar reportes.
+- Convertir una hoja de cálculo en una herramienta operativa interna.
 
-Facturas reales
-
-Órdenes de compra reales
-
-Proveedores reales
-
-Tareas reales
-
-Nombres internos sensibles
-
-Capturas con información corporativa
-
-Archivos exportados reales
-
-```
 ---
-Datos sensibles reemplazados
-Para publicar este proyecto, usar valores demo como:
-```txt
 
-usuario.demo@empresa.com
+## Retos técnicos resueltos
 
-alertas.demo@empresa.com
+- Modularización de scripts que inicialmente estaban dispersos.
+- Sincronización entre hojas con estructuras diferentes.
+- Prevención de conflictos mediante `LockService`.
+- Manejo de triggers instalables.
+- Extracción de datos desde correos HTML.
+- Control de duplicados.
+- Generación dinámica de textos operativos.
+- Integración con API externa desde Apps Script.
+- Separación entre configuración real y archivos públicos.
+- Documentación del proyecto para portafolio profesional.
 
-AUTORIZADOR DEMO 1
-
-AUTORIZADOR DEMO 2
-
-AUTORIZADOR DEMO 3
-
-PROVEEDOR DEMO S.A.
-
-OC-DEMO-0001
-
-FACTURA-DEMO-0001
-
-TAREA-DEMO-0001
-
-```
 ---
-Capturas requeridas
-Las capturas deben guardarse exactamente con estos nombres dentro de:
-```txt
 
-docs/screenshots/
+## Roadmap
 
-```
-Lista obligatoria:
-```txt
+- Agregar panel web independiente.
+- Migrar logs a una base persistente.
+- Incorporar roles por usuario.
+- Mejorar validaciones de seguridad.
+- Agregar pruebas unitarias para funciones críticas.
+- Implementar control avanzado de errores.
+- Agregar dashboard histórico.
+- Integrar exportación a Looker Studio.
+- Mejorar documentación técnica por módulo.
+- Automatizar despliegue con clasp.
 
-01-menu-sistema.png
-
-02-task-manager.png
-
-03-dashboard.png
-
-04-alertas-oc.png
-
-05-facturas.png
-
-06-observaciones.png
-
-07-whatsapp-auto.png
-
-08-programador-whatsapp.png
-
-```
-01 — Menú principal del sistema
-![Menú principal del sistema](docs/screenshots/01-menu-sistema.png)
-02 — Task Manager
-![Task Manager](docs/screenshots/02-task-manager.png)
-03 — Dashboard operativo
-![Dashboard operativo](docs/screenshots/03-dashboard.png)
-04 — Alertas de órdenes de compra
-![Alertas OC](docs/screenshots/04-alertas-oc.png)
-05 — Facturas por compartir
-![Facturas por compartir](docs/screenshots/05-facturas.png)
-06 — Observaciones automáticas
-![Observaciones automáticas](docs/screenshots/06-observaciones.png)
-07 — WhatsApp Auto Manager
-![WhatsApp Auto Manager](docs/screenshots/07-whatsapp-auto.png)
-08 — Programador visual de WhatsApp
-![Programador visual de WhatsApp](docs/screenshots/08-programador-whatsapp.png)
 ---
-Impacto operativo
-La solución permite:
-Centralizar procesos operativos dentro de Google Sheets.
-Reducir revisión manual repetitiva.
-Mejorar seguimiento de tareas.
-Detectar órdenes de compra faltantes.
-Controlar facturas pendientes.
-Estandarizar observaciones.
-Automatizar recordatorios por correo.
-Automatizar recordatorios y campañas por WhatsApp.
-Mantener trazabilidad básica de procesos.
-Integrar varios flujos administrativos en un menú único.
-Disminuir errores por edición manual.
-Mejorar la visibilidad de pendientes críticos.
-Acelerar la comunicación interna.
----
-Retos técnicos resueltos
-Hojas con estructura operativa variable
-El sistema identifica cabeceras de tarea y procesa bloques de información dentro de `GENERAL`.
-Sincronización sin base de datos externa
-Se implementó sincronización entre hojas usando Apps Script, mapas en memoria y triggers de edición.
-Control de duplicados
-El módulo de facturas evita registros repetidos cruzando número de factura y número de ingreso.
-Automatización con triggers
-Se automatizaron alertas, reportes, revisiones y recordatorios usando activadores de Apps Script.
-WhatsApp programable
-Se creó un módulo aislado con prefijo propio, hojas dedicadas, plantillas, contactos, logs y scheduler.
-Modularización progresiva
-El sistema se organizó en módulos separados para mejorar mantenimiento, lectura y escalabilidad.
-Interfaz visual sin infraestructura externa
-Se usó HTML Service para crear ventanas y formularios dentro de Google Sheets sin servidor adicional.
----
-Roadmap
-Mejoras futuras:
-Migrar toda credencial sensible a `PropertiesService`.
-Crear ambiente demo separado del ambiente productivo.
-Agregar roles de usuario.
-Mejorar dashboard visual.
-Agregar exportación PDF.
-Implementar pruebas con datos ficticios.
-Centralizar manejo de errores.
-Crear documentación técnica por módulo.
-Agregar control de cambios por usuario.
-Crear versión Web App externa con HTML Service.
-Mejorar auditoría de cambios.
-Agregar notificaciones por estado.
-Agregar configuración visual para todos los módulos.
-Crear instalador guiado del sistema.
----
-Aprendizajes técnicos
-Este proyecto fortaleció habilidades en:
-Automatización de procesos administrativos.
-Diseño modular en Google Apps Script.
-Integración con servicios de Google Workspace.
-Consumo de APIs externas.
-Manejo de triggers.
-Limpieza y transformación de datos.
-Creación de interfaces con HTML Service.
-Control de duplicados.
-Reportería automatizada.
-Programación orientada a eventos.
-Manejo de hojas como base operativa.
-Documentación técnica para repositorios GitHub.
-Sanitización de proyectos internos para portafolio profesional.
----
-Uso profesional del proyecto
-Este repositorio documenta una solución real de automatización operativa desarrollada para optimizar procesos administrativos sobre Google Workspace.
-Puede presentarse como experiencia en:
-Desarrollo de soluciones internas.
-Automatización de procesos.
-Google Apps Script.
-Integración con APIs.
-Gestión de datos en Google Sheets.
-Automatización de correos.
-Integración con WhatsApp.
-Documentación técnica.
-Mejora continua de procesos.
----
-Descripción para hoja de vida
-```txt
 
-Gestión de Tareas Operativas — Google Apps Script Automation Suite
+## Aprendizajes técnicos
 
-Google Apps Script | Google Sheets | GmailApp | MailApp | HTML Service | Green API | Triggers
+Este proyecto fortaleció competencias en:
 
-Diseñé y desarrollé una suite operativa sobre Google Sheets para centralizar la gestión de tareas, sincronizar información entre hojas, emitir alertas de órdenes de compra faltantes, controlar facturas pendientes, generar observaciones automáticas y programar recordatorios por WhatsApp. La solución integra menú personalizado, formularios HTML, triggers, reportes por correo, control de criticidad, logs y módulos independientes para automatizar procesos administrativos reales.
+- Automatización con Google Apps Script.
+- Diseño modular de soluciones internas.
+- Integración con servicios de Google Workspace.
+- Procesamiento de correos.
+- Manejo de triggers.
+- Consumo de APIs externas.
+- Normalización de datos.
+- Diseño de flujos operativos.
+- Documentación técnica para portafolio.
+- Publicación segura de proyectos internos.
 
-```
 ---
-Autor
-Jimmy Omar Toapanta Guayanay
-Ingeniero en Informática
+
+## Autor
+
+**Jimmy Omar Toapanta Guayanay**  
+Ingeniero Informático  
 Quito, Ecuador
-GitHub: github.com/eslay07
+
+Proyecto desarrollado como iniciativa interna para optimizar procesos administrativos y operativos mediante automatización con Google Apps Script.
+
 ---
-Licencia
-Proyecto documentado con fines profesionales y demostrativos.
-Para uso público se recomienda publicar únicamente una versión sanitizada, sin datos corporativos reales ni credenciales privadas.
+
+## Licencia
+
+Este proyecto se publica con fines de documentación técnica y portafolio profesional.
+
+Revisar el archivo `LICENSE` para más información.
