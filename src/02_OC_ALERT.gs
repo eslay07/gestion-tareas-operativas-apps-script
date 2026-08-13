@@ -242,4 +242,3 @@ function _OC_writeDebug(ss, info) {
   var ts = Utilities.formatDate(info.now, APP_CORE.TZ, 'yyyy-MM-dd HH:mm:ss');
   sh.appendRow([ts, info.fechaCol, info.tareasDetectadas, CFG_OC_ALERT_V2.SHEET_NAME, 'Si tareas=0 no se envía correo.']);
 }
-/
