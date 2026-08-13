@@ -1,0 +1,29 @@
+# Node / clasp
+node_modules/
+.clasprc.json
+.clasp.json
+
+# Config real
+src/00_APP_CONFIG.gs
+config.gs
+.env
+.env.local
+
+# Credenciales
+credentials/
+secrets/
+private/
+*.key
+*.pem
+
+# Exports reales
+exports/
+*.xlsx
+*.csv
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

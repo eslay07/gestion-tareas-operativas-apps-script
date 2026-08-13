@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --line:#d9e1ec;
+      --text:#162033;
+      --muted:#5d6b82;
+      --primary:#0b57d0;
+      --primary-soft:#e8f0fe;
+      --success:#067647;
+      --success-soft:#ecfdf3;
+      --warn:#b54708;
+      --warn-soft:#fff7ed;
+      --danger:#b42318;
+      --danger-soft:#fee4e2;
+      --chip:#eef3fb;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{padding:12px}
+    .tabs{display:flex;gap:8px;margin-bottom:12px}
+    .tab{flex:1;border:none;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--text)}
+    .tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:none}
+    .panel.active{display:block}
+    .head{padding:14px 16px;border-bottom:1px solid var(--line);background:#fbfcfe}
+    .head h2{margin:0 0 4px 0;font-size:16px}
+    .muted{font-size:12px;color:var(--muted)}
+    .body{padding:14px 16px}
+    .field{margin-bottom:12px}
+    label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+    input[type=text]{width:100%;border:1px solid #cfd8e3;border-radius:10px;padding:10px 12px;font-size:13px;background:#fff}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;font-size:13px;cursor:pointer;font-weight:700}
+    .btn:hover{filter:brightness(.98)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .btn-soft{background:var(--primary-soft);color:#194185;border-color:#c9d8ff}
+    .status{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;font-size:12px;border:1px solid transparent}
+    .status.show{display:block}
+    .status.info{background:var(--primary-soft);color:#194185;border-color:#c9d8ff}
+    .status.success{background:var(--success-soft);color:var(--success);border-color:#abefc6}
+    .status.warn{background:var(--warn-soft);color:var(--warn);border-color:#fed7aa}
+    .status.error{background:var(--danger-soft);color:var(--danger);border-color:#fecdca}
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+    .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+    .card .k{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .card .v{font-size:14px;font-weight:700}
+    .banner{padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700;margin:12px 0}
+    .banner.ok{background:var(--success-soft);color:var(--success)}
+    .banner.warn{background:var(--warn-soft);color:var(--warn)}
+    .banner.err{background:var(--danger-soft);color:var(--danger)}
+    .section{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+    .section-head{padding:10px 12px;background:#fbfcfe;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .section-head strong{font-size:13px}
+    .section-body{padding:0}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th,td{padding:8px 10px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:top}
+    th{background:#f8fafc;font-size:11px;color:#344054}
+    .summary-box{margin-top:12px;border:1px dashed #c9d3e0;border-radius:12px;background:#fbfcfe;padding:10px 12px;white-space:pre-wrap;font-size:12px;line-height:1.45}
+    .empty{padding:14px 12px;color:var(--muted);font-size:12px}
+    .small-btn{border:none;background:var(--primary);color:#fff;border-radius:8px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:700}
+    .checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .check{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:13px;font-weight:700}
+    .check.ok{background:var(--success-soft);color:var(--success)}
+    .check.no{background:var(--warn-soft);color:var(--warn)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" id="tabRecoBtn" onclick="switchTab('reco')">💰 Recomendación</button>
+      <button class="tab" id="tabCloseBtn" onclick="switchTab('close')">✅ Cierre</button>
+    </div>
+
+    <section class="panel active" id="tabReco">
+      <div class="head">
+        <h2>Recomendación por código</h2>
+        <div class="muted">Busca por código de producto. La tarea solo agrupa ítems; la recomendación pivotea por código.</div>
+      </div>
+      <div class="body">
+        <div class="field">
+          <label for="codeInput">Código</label>
+          <input type="text" id="codeInput" placeholder="Ej: 10-103-250-295">
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" id="btnSearchCode" onclick="searchCode()">Buscar código</button>
+          <button class="btn btn-soft" id="btnUseSelectedCode" onclick="useSelectedCode()">Usar código de fila actual</button>
+          <button class="btn" id="btnCopyReco" style="display:none" onclick="copyRecoSummary()">Copiar resumen</button>
+        </div>
+        <div id="statusReco" class="status"></div>
+        <div id="recoResult"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="tabClose">
+      <div class="head">
+        <h2>Cierre por tarea</h2>
+        <div class="muted">Evalúa si una tarea ya está lista para cierre usando OC, facturas y anticipos/contado.</div>
+      </div>
+      <div class="body">
+        <div class="field">
+          <label for="taskInput">Número de tarea</label>
+          <input type="text" id="taskInput" placeholder="Ej: 154810322">
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" id="btnSearchTask" onclick="searchTask()">Evaluar tarea</button>
+          <button class="btn btn-soft" id="btnUseSelectedTask" onclick="useSelectedTask()">Usar tarea de fila actual</button>
+          <button class="btn" id="btnCopyClose" style="display:none" onclick="copyCloseSummary()">Copiar resumen</button>
+        </div>
+        <div id="statusClose" class="status"></div>
+        <div id="closeResult"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var APP = { selection:null, reco:null, closure:null };
+
+    function $(id){ return document.getElementById(id); }
+    function esc(v){ return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+    function errMsg(err){ return (err && err.message) ? err.message : String(err || 'Error desconocido'); }
+
+    function showStatus(id, type, msg){
+      var el = $(id);
+      el.className = 'status show ' + type;
+      el.textContent = msg;
+    }
+    function hideStatus(id){
+      var el = $(id);
+      el.className = 'status';
+      el.textContent = '';
+    }
+
+    function switchTab(name){
+      $('tabReco').classList.toggle('active', name === 'reco');
+      $('tabClose').classList.toggle('active', name === 'close');
+      $('tabRecoBtn').classList.toggle('active', name === 'reco');
+      $('tabCloseBtn').classList.toggle('active', name === 'close');
+    }
+
+    function setBusyReco(flag){
+      $('btnSearchCode').disabled = flag;
+      $('btnUseSelectedCode').disabled = flag;
+    }
+    function setBusyClose(flag){
+      $('btnSearchTask').disabled = flag;
+      $('btnUseSelectedTask').disabled = flag;
+    }
+
+    function init(){
+      google.script.run
+        .withSuccessHandler(function(data){
+          APP.selection = data.selection || {};
+          if (APP.selection.code) $('codeInput').value = APP.selection.code;
+          if (APP.selection.taskId) $('taskInput').value = APP.selection.taskId;
+        })
+        .withFailureHandler(function(err){
+          showStatus('statusReco', 'warn', errMsg(err));
+        })
+        .SMARTUI_bootstrap();
+    }
+
+    function normalizeCode(v){ return String(v || '').trim().toUpperCase(); }
+    function normalizeTask(v){ return String(v || '').replace(/\D/g, ''); }
+
+    function useSelectedCode(){
+      google.script.run
+        .withSuccessHandler(function(ctx){
+          if (!ctx.ok) return showStatus('statusReco', 'warn', ctx.message || 'No pude detectar el código.');
+          if (ctx.code) {
+            $('codeInput').value = ctx.code;
+            showStatus('statusReco', 'success', 'Código detectado: ' + ctx.code);
+          } else {
+            showStatus('statusReco', 'warn', 'La fila actual no tiene código en GENERAL.');
+          }
+        })
+        .withFailureHandler(function(err){ showStatus('statusReco', 'error', errMsg(err)); })
+        .SMARTUI_getCurrentGeneralContext();
+    }
+
+    function useSelectedTask(){
+      google.script.run
+        .withSuccessHandler(function(ctx){
+          if (!ctx.ok) return showStatus('statusClose', 'warn', ctx.message || 'No pude detectar la tarea.');
+          if (ctx.taskId) {
+            $('taskInput').value = ctx.taskId;
+            showStatus('statusClose', 'success', 'Tarea detectada: ' + ctx.taskId);
+          } else {
+            showStatus('statusClose', 'warn', 'La fila actual no pertenece a una tarea reconocida.');
+          }
+        })
+        .withFailureHandler(function(err){ showStatus('statusClose', 'error', errMsg(err)); })
+        .SMARTUI_getCurrentGeneralContext();
+    }
+
+    function searchCode(){
+      var code = normalizeCode($('codeInput').value);
+      if (!code) return showStatus('statusReco', 'warn', 'Ingresa un código.');
+      setBusyReco(true);
+      showStatus('statusReco', 'info', 'Buscando código...');
+      $('recoResult').innerHTML = '';
+      $('btnCopyReco').style.display = 'none';
+
+      google.script.run
+        .withSuccessHandler(function(data){
+          APP.reco = data;
+          setBusyReco(false);
+          hideStatus('statusReco');
+          $('btnCopyReco').style.display = 'inline-block';
+          renderReco(data);
+        })
+        .withFailureHandler(function(err){
+          setBusyReco(false);
+          showStatus('statusReco', 'error', errMsg(err));
+        })
+        .SMARTUI_getCodeRecommendation(code);
+    }
+
+    function searchTask(){
+      var taskId = normalizeTask($('taskInput').value);
+      if (!taskId) return showStatus('statusClose', 'warn', 'Ingresa una tarea válida.');
+      setBusyClose(true);
+      showStatus('statusClose', 'info', 'Evaluando tarea...');
+      $('closeResult').innerHTML = '';
+      $('btnCopyClose').style.display = 'none';
+
+      google.script.run
+        .withSuccessHandler(function(data){
+          APP.closure = data;
+          setBusyClose(false);
+          hideStatus('statusClose');
+          $('btnCopyClose').style.display = 'inline-block';
+          renderClosure(data);
+        })
+        .withFailureHandler(function(err){
+          setBusyClose(false);
+          showStatus('statusClose', 'error', errMsg(err));
+        })
+        .SMARTUI_getTaskClosure(taskId);
+    }
+
+    function copyRecoSummary(){
+      if (!APP.reco || !APP.reco.summaryText) return;
+      navigator.clipboard.writeText(APP.reco.summaryText)
+        .then(function(){ showStatus('statusReco', 'success', 'Resumen copiado.'); })
+        .catch(function(){ showStatus('statusReco', 'warn', 'No se pudo copiar automáticamente.'); });
+    }
+
+    function copyCloseSummary(){
+      if (!APP.closure || !APP.closure.summaryText) return;
+      navigator.clipboard.writeText(APP.closure.summaryText)
+        .then(function(){ showStatus('statusClose', 'success', 'Resumen copiado.'); })
+        .catch(function(){ showStatus('statusClose', 'warn', 'No se pudo copiar automáticamente.'); });
+    }
+
+    function goRow(rowNumber){ google.script.run.SMARTUI_goToGeneralRow(rowNumber); }
+
+    function renderReco(d){
+      var bannerClass = 'warn';
+      if ((d.recommendation.decision || '').indexOf('OK') !== -1 || (d.recommendation.decision || '').indexOf('FUERTE') !== -1) bannerClass = 'ok';
+      if ((d.recommendation.decision || '').indexOf('SIN') !== -1) bannerClass = 'err';
+
+      var html = '';
+      html += '<div class="banner ' + bannerClass + '">[' + esc(d.code) + '] ' + esc(d.itemName) + '<br>' + esc(d.recommendation.decision || 'N/D') + '</div>';
+      html += '<div class="cards">'
+           +  card('Compras registradas', d.stats.totalPurchases)
+           +  card('Tareas involucradas', d.stats.uniqueTasks)
+           +  card('Proveedores históricos', d.stats.uniqueProviders)
+           +  card('Pendientes sin OC', d.stats.pendingWithoutOC)
+           +  card('Histórico mínimo', d.historical.min)
+           +  card('Catálogo mínimo', d.catalog.min)
+           +  card('Mejor referencia', d.recommendation.price)
+           +  card('Ahorro potencial', d.recommendation.savingAbs)
+           + '</div>';
+
+      html += section(
+        'Recomendación',
+        '<div class="summary-box">'
+          + '<strong>Fuente recomendada:</strong> ' + esc(d.recommendation.source) + '<br>'
+          + '<strong>Proveedor recomendado:</strong> ' + esc(d.recommendation.provider) + '<br>'
+          + '<strong>Precio recomendado:</strong> ' + esc(d.recommendation.price) + '<br>'
+          + '<strong>Ahorro %:</strong> ' + esc(d.recommendation.savingPct) + '<br>'
+        + '</div>'
+      );
+
+      html += section('Últimas compras detectadas',
+        renderTable(['Fila','Tarea','Depto','Proveedor','Precio','OC','Ir'],
+          (d.recentPurchases || []).map(function(r){
+            return [
+              esc(r.rowNumber), esc(r.taskId), esc(r.depto), esc(r.provider), esc(r.price), esc(r.oc),
+              '<button class="small-btn" onclick="goRow(' + Number(r.rowNumber) + ')">Abrir</button>'
+            ];
+          }),
+          'No encontré compras previas en GENERAL para este código.'
+        )
+      );
+
+      html += section('Pendientes sin OC para este código',
+        renderTable(['Fila','Tarea','Depto','Proveedor','Precio','Ir'],
+          (d.pendingRows || []).map(function(r){
+            return [
+              esc(r.rowNumber), esc(r.taskId), esc(r.depto), esc(r.provider), esc(r.price),
+              '<button class="small-btn" onclick="goRow(' + Number(r.rowNumber) + ')">Abrir</button>'
+            ];
+          }),
+          'No hay pendientes sin OC para este código.'
+        )
+      );
+
+      html += section('Referencias en catálogo',
+        renderTable(['Proveedor','Precio','Cantidad','Descripción'],
+          (d.catalogRows || []).map(function(r){
+            return [esc(r.provider), esc(r.price), esc(r.qty), esc(r.desc)];
+          }),
+          'No encontré este código en Precios Enero.'
+        )
+      );
+
+      html += section('Resumen para copiar', '<div class="summary-box">' + esc(d.summaryText) + '</div>');
+      $('recoResult').innerHTML = html;
+    }
+
+    function renderClosure(d){
+      var bannerClass = d.closeReady ? 'ok' : 'warn';
+      var html = '';
+      html += '<div class="banner ' + bannerClass + '">TAREA ' + esc(d.taskId) + '<br>' + (d.closeReady ? 'APTA PARA CIERRE' : 'AÚN NO APTA PARA CIERRE') + '</div>';
+      html += '<div class="checklist">'
+           +  check('OC completas', d.itemsTotal === d.itemsWithOC)
+           +  check('Facturas compartidas', (d.facturasTotal === 0 || d.facturasTotal === d.facturasShared))
+           +  check('Anticipos cerrados', d.anticiposPendientes === 0)
+           +  check('Cierre apto', d.closeReady)
+           + '</div>';
+      html += '<div class="cards">'
+           +  card('Depto', d.depto || 'N/D')
+           +  card('Solicitante', d.solic || 'N/D')
+           +  card('Items totales', d.itemsTotal)
+           +  card('Items con OC', d.itemsWithOC)
+           +  card('OC únicas', d.uniqueOCCount)
+           +  card('Facturas total', d.facturasTotal)
+           +  card('Facturas compartidas', d.facturasShared)
+           +  card('Anticipos pendientes', d.anticiposPendientes)
+           + '</div>';
+      html += section('Motivo y acción',
+        '<div class="summary-box"><strong>Motivo:</strong> ' + esc(d.reason) + '\n\n<strong>Acción sugerida:</strong> ' + esc(d.action) + '</div>'
+      );
+      html += section('Filas sin OC',
+        renderTable(['Fila','Código','Descripción','Proveedor','Ir'],
+          (d.missingOCRows || []).map(function(r){
+            return [
+              esc(r.rowNumber), esc(r.code), esc(r.desc), esc(r.provider),
+              '<button class="small-btn" onclick="goRow(' + Number(r.rowNumber) + ')">Abrir</button>'
+            ];
+          }),
+          'No hay filas sin OC.'
+        )
+      );
+      html += section('Anticipos / contado pendientes',
+        renderTable(['OC','Proveedor','Tipo','%','Estado'],
+          (d.pendingAnticipos || []).map(function(r){
+            return [esc(r.oc), esc(r.provider), esc(r.type), esc(r.percent), esc(r.status)];
+          }),
+          'No hay anticipos/contado pendientes.'
+        )
+      );
+      html += section('Facturas detectadas',
+        renderTable(['Proveedor','Factura','Ingreso','Compartida'],
+          (d.factRows || []).map(function(r){
+            return [esc(r.provider), esc(r.factura), esc(r.ingreso), esc(r.shared)];
+          }),
+          'No hay facturas registradas para esta tarea.'
+        )
+      );
+      html += section('Resumen para copiar', '<div class="summary-box">' + esc(d.summaryText) + '</div>');
+      $('closeResult').innerHTML = html;
+    }
+
+    function card(k,v){ return '<div class="card"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div></div>'; }
+    function check(label, ok){ return '<div class="check ' + (ok ? 'ok' : 'no') + '">' + (ok ? '✅ ' : '⚠️ ') + esc(label) + '</div>'; }
+    function section(title, body){ return '<div class="section"><div class="section-head"><strong>' + esc(title) + '</strong></div><div class="section-body">' + body + '</div></div>'; }
+
+    function renderTable(headers, rows, emptyText){
+      if (!rows || !rows.length) return '<div class="empty">' + esc(emptyText || 'Sin datos') + '</div>';
+      var html = '<table><thead><tr>';
+      headers.forEach(function(h){ html += '<th>' + esc(h) + '</th>'; });
+      html += '</tr></thead><tbody>';
+      rows.forEach(function(r){
+        html += '<tr>';
+        r.forEach(function(cell){ html += '<td>' + cell + '</td>'; });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      return html;
+    }
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
+
