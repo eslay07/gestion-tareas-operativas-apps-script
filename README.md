@@ -1,5 +1,8 @@
 # Gestión de Tareas Operativas
 
+[Guía visual actual con capturas (PDF)](docs/portafolio/Guia_Visual_Actual.pdf) · [Procedencia y alcance de las muestras](docs/portafolio/README.md)
+
+
 ## Lectura rápida para evaluar el proyecto
 
 Suite de Apps Script que reúne seguimiento, sincronización, alertas y formularios sobre Google Sheets.
