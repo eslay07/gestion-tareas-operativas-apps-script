@@ -1,5 +1,15 @@
 # Gestión de Tareas Operativas
 
+## Lectura rápida para evaluar el proyecto
+
+Suite de Apps Script que reúne seguimiento, sincronización, alertas y formularios sobre Google Sheets.
+
+**Tecnologías:** Google Apps Script · JavaScript · Google Sheets · HTML Service
+**Estado:** Implementación que requiere hojas, permisos y servicios externos propios. Las capturas y la documentación no sustituyen la validación de cada despliegue.
+
+[Ver el problema, la evidencia de implementación y las limitaciones](PORTFOLIO.md) · [Portafolio del autor](https://github.com/eslay07)
+
+
 Suite de automatización desarrollada en **Google Apps Script** sobre **Google Sheets** para centralizar tareas operativas, sincronizar información, generar alertas, controlar facturas pendientes, crear observaciones automáticas y programar recordatorios por WhatsApp mediante Green API.
 
 ![Google Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-4285F4?style=flat-square&logo=google&logoColor=white)
@@ -763,8 +773,8 @@ Este proyecto fortaleció competencias en:
 
 ## Autor
 
-**Jimmy Omar Toapanta Guayanay**  
-Ingeniero Informático  
+**Jimmy Omar Toapanta Guayanay**
+Ingeniero Informático
 Quito, Ecuador
 
 Proyecto desarrollado como iniciativa interna para optimizar procesos administrativos y operativos mediante automatización con Google Apps Script.
